@@ -1,0 +1,30 @@
+<% obj.each do |article| %>
+    <div class="col-md-6">
+      <div class="card flex-md-row mb-4 shadow-sm h-md-250">
+        <div class="card-body d-flex flex-column align-items-start">
+          <h3 class="mb-0">
+            <%= link_to article.title, article_path(article) %>
+          </h3>
+          <div class="mb-1 text-muted">
+            <small>Created by: <%= article.user.username if article.user%>, <%= time_ago_in_words(article.created_at) %> ago, 
+                    last updated: <%= time_ago_in_words(article.updated_at) %> ago
+            </small>
+          </div>
+          <p class="card-text mb-auto"><%= article.description %></p>
+          <%= link_to "Continue reading", article_path(article) %>
+          <hr /> 
+
+          <% if article.categories.any? %>
+            <p>Categories: <%= render article.categories %> </p>
+          <% end %>
+
+          <% if logged_in? && (current_user == article.user || current_user.admin?) %>
+            <p>
+              <%= link_to "Edit", edit_article_path(article), class: "btn btn-xs btn-primary" %>
+              <%= link_to "Delete", article_path(article), class: "btn btn-xs btn-danger", method: :delete, data: {confirm: "Are you sure?"} %>
+            </p>
+          <% end %>
+        </div>        
+      </div>
+    </div>
+    <% end %>
